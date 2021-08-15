@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "strict": false,
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "outDir": "dist"
+  },
+  "include": ["lib/**.ts", "lib/**.tsx"],
+  "exclude": ["node_modules", "lib/**/*.test.ts", "lib/**/*.test.tsx"]
+}

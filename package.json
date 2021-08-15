@@ -1,0 +1,32 @@
+{
+  "name": "in-form",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-mocha tests/**/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptejada/in-form.git"
+  },
+  "author": "Pablo Tejada <pablo@tejada.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ptejada/in-form/issues"
+  },
+  "homepage": "https://github.com/ptejada/in-form#readme",
+  "dependencies": {
+    "@types/react": "17.0.8",
+    "react": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
+    "ts-mocha": "^8.0.0",
+    "typescript": "4.2.4"
+  }
+}
