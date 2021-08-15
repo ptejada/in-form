@@ -11,11 +11,11 @@ Features include:
 
 ## Installation
 ```bash
-npm i in-form
+npm i @tejada/in-form
 
 # Or with yarn
 
-yarn add in-form
+yarn add @tejada/in-form
 ```
 
 ## Usage
