@@ -1,7 +1,6 @@
-import * as assert from 'assert'
-
+import {expect} from 'chai'
 describe('Email Component', () => {
   it('should render standard stub', () => {
-    assert.equal(1,1)
+    expect(1).is.equal(1)
   })
 })

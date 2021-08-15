@@ -10,7 +10,7 @@ Features include:
 - Default values.
 
 ## Installation
-```
+```bash
 npm i in-form
 
 # Or with yarn
@@ -18,7 +18,7 @@ npm i in-form
 yarn add in-form
 ```
 
-### Usage
+## Usage
 Consider the following example form 
 
 ```html
@@ -70,3 +70,13 @@ function App() {
   )
 }
 ```
+
+## Options
+The following options apply to the `useForm` hook and `InForm` component:
+
+
+| Option | Type | Description |
+| --- | --- | --- |
+| onSuccess | (response) => void | A function called after a successful submission | 
+|onFailure| (response) => void | A function called after the submission fails |
+|defaults | {fieldName: fieldValue} | Default values for form fields |

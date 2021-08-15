@@ -5,8 +5,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "module": "CommonJS",
-    "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react",
     "outDir": "dist"
   },
   "include": ["lib/**.ts", "lib/**.tsx"],

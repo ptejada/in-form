@@ -1,4 +1,4 @@
-import {ReactNode} from 'react'
+import React, {ReactNode} from 'react'
 import {FormProps, useForm} from './useForm'
 
 export type InFormProps = { children: ReactNode } & FormProps

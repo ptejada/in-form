@@ -1,8 +1,9 @@
 {
-  "name": "in-form",
+  "name": "@tejada/in-form",
   "version": "0.1.0",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "description": "A simple React component and hook to work with HTML forms",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "ts-mocha tests/**/*.test.ts"
@@ -11,6 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/ptejada/in-form.git"
   },
+  "keywords": ["react", "form", "hook"],
   "author": "Pablo Tejada <pablo@tejada.dev>",
   "license": "MIT",
   "bugs": {

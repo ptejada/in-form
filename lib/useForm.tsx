@@ -111,7 +111,7 @@ function serializeData(data: FormData, asJson: boolean = false) {
   }).join('&')
 }
 
-function useForm({action, method = 'POST', jsonRequest = false, defaults, ...options}: FormProps) {
+function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, ...options}: FormProps) {
   const formRef = useRef<HTMLFormElement>()
 
   useEffect(() => {
@@ -120,11 +120,6 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults, ...opt
 
     if (Object.keys(defaults).length) {
       fillForm($form, defaults)
-      /*
-      for (const name in defaults) {
-        $form.elements[name].value = defaults[name]
-      }
-       */
     }
 
     return () => formRef.current?.removeEventListener('change', handleChange)
@@ -139,7 +134,6 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults, ...opt
 
   function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
-
 
     if (action?.length) {
       let init: RequestInit = {}
@@ -165,11 +159,11 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults, ...opt
         const contentType = response.headers.get('Content-Type')
 
         if (typeof contentType == 'string') {
-          if (contentType.indexOf('/json')) {
+          if (contentType.indexOf('/json') > -1) {
             return response.json()
           }
 
-          if (contentType.indexOf('urlencoded')) {
+          if (contentType.indexOf('urlencoded') > -1) {
             return response.formData()
           }
         }
