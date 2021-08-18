@@ -2,7 +2,7 @@ import {SyntheticEvent, useEffect, useRef} from 'react'
 
 type METHOD = 'GET' | 'POST' | 'PUT'
 
-export interface FormProps {
+export type FormProps = {
   action?: string
   method?: METHOD
   jsonRequest?: boolean
@@ -30,8 +30,16 @@ function cleanName(name: string) {
 
 function fillForm(form: HTMLFormElement, defaults: any) {
   Object.keys(defaults).forEach(name => {
-    const element = form.elements[name]
+    let element = form.elements[name]
     const defValue = defaults[name]
+
+    if (element === undefined && Array.isArray(defValue)) {
+       element = form.elements[`${name}[]`]
+    }
+
+    if (element === undefined) {
+      return
+    }
 
     function wrap<T>(list): Array<T & HTMLFormElement> {
       return list.length !== undefined ? list : [list]

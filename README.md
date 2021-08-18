@@ -19,7 +19,7 @@ yarn add @tejada/in-form
 ```
 
 ## Usage
-Consider the following example form 
+Consider the following example form plan HTML
 
 ```html
 <form action="/contact" method="POST">
