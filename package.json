@@ -1,10 +1,12 @@
 {
   "name": "@tejada/in-form",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple React component and hook to work with HTML forms",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublish": "yarn test && rm -rf dist && yarn build",
