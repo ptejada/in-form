@@ -1,5 +1,5 @@
 import fillForm from './fillForm'
-import serializeFormData from './serializeFormData'
+import serializeFormData, {formPayload} from './serializeFormData'
 
 /**
  * Sanitize a form name
@@ -16,4 +16,4 @@ function cleanName(name: string) {
   return name
 }
 
-export {fillForm, cleanName, serializeFormData}
+export {fillForm, cleanName, serializeFormData, formPayload}

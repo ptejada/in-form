@@ -1,21 +1,26 @@
 import {SyntheticEvent, useEffect, useRef} from 'react'
-import {fillForm, serializeFormData} from './utils'
+import {fillForm, formPayload, serializeFormData} from './utils'
 
 type METHOD = 'GET' | 'POST' | 'PUT'
+
 type DefaultValues = {
   [key: string]: string[] | string | boolean
 }
+
+type OptionalPromise = Promise<any> | undefined | void
+type SubmittingCallback = (inProgress: boolean) => void
 
 export interface FormProps {
   action?: string
   method?: METHOD
   jsonRequest?: boolean
+  handleSubmit?: (data, done: (response, isOk?: boolean) => OptionalPromise) => OptionalPromise
   /**
    * Triggered when the submitting state changes
    *
    * @param {boolean} inProgress Whether the submission is in progress or not
    */
-  submitting?: (inProgress: boolean) => void
+  submitting?: SubmittingCallback
   /**
    * Triggered on a successful submission
    * @param response
@@ -36,8 +41,7 @@ type ChangeEvent = Event | SyntheticEvent<HTMLInputElement>
 function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, ...options}: FormProps) {
   const formRef = useRef<HTMLFormElement>()
   const {
-    submitting = () => {
-    }
+    submitting = () => {},
   } = options
 
   useEffect(() => {
@@ -64,10 +68,34 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, .
   function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
 
+    const {handleSubmit: submitter} = options
+    const data = new window.FormData(formRef.current)
+
+    // Use custom submission handler if provided
+    if (typeof submitter === 'function') {
+      submitting(true)
+      const subPromise = submitter(formPayload(data), (response, isOk) => {
+        submitting(false)
+        if (isOk === false) {
+          options?.onSuccess(response)
+        } else {
+          options?.onFailure(response)
+        }
+      })
+
+      if (subPromise && typeof subPromise.then === 'function') {
+        return subPromise
+          .then(options.onSuccess, options.onFailure)
+          .catch(options.onFailure)
+          .finally(() => submitting(false))
+      }
+
+      return;
+    }
+
+    // Continue with the built-in submitter logic
     if (action?.length) {
       let init: RequestInit = {}
-
-      const data = new FormData(formRef.current)
 
       if (jsonRequest) {
         init.body = serializeFormData(data, true)

@@ -83,4 +83,30 @@ describe('InForm Component Testing', () => {
     expect(getNode('ticked4').checked).to.not.ok
     expect(getNodeChecked('multiTick[]')).has.property('value').and.is.equal(defaults.multiTick[0])
   })
+
+  it('should trigger submitting callback', (done) => {
+    let execCounter = 1
+
+    function submitting(yes) {
+      if (execCounter === 1) {
+        expect(yes).to.be.ok
+      } else {
+        expect(yes).to.not.be.ok
+        done()
+      }
+
+      execCounter++
+    }
+
+    act(() => {
+      ReactDOM.render(
+        <InForm submitting={submitting} handleSubmit={(data, done) => done(data)}>
+          <input type='text' name='name' defaultValue='Pablo'/>
+          <button type='submit'>Send</button>
+        </InForm>
+        , rootContainer)
+    })
+
+    rootContainer.querySelector('form').dispatchEvent(new window.Event('submit', {bubbles: true}))
+  })
 })
