@@ -1,136 +1,57 @@
 import {SyntheticEvent, useEffect, useRef} from 'react'
+import {fillForm, serializeFormData} from './utils'
 
 type METHOD = 'GET' | 'POST' | 'PUT'
+type DefaultValues = {
+  [key: string]: string[] | string | boolean
+}
 
-export type FormProps = {
+export interface FormProps {
   action?: string
   method?: METHOD
   jsonRequest?: boolean
+  /**
+   * Triggered when the submitting state changes
+   *
+   * @param {boolean} inProgress Whether the submission is in progress or not
+   */
+  submitting?: (inProgress: boolean) => void
+  /**
+   * Triggered on a successful submission
+   * @param response
+   */
   onSuccess?: (response: any) => void
+  /**
+   * Triggered on when error occurs with the submission.
+   * If the response is not within the http code 200-299 or there is any network error
+   *
+   * @param response
+   */
   onFailure?: (response: any) => void
-  defaults?: {}
+  defaults?: DefaultValues
 }
 
 type ChangeEvent = Event | SyntheticEvent<HTMLInputElement>
 
-/**
- * Sanitize a form name
- *
- * @param name
- */
-function cleanName(name: string) {
-  const index = name.lastIndexOf('[]')
-
-  if (index > -1) {
-    return name.substring(0, index)
-  }
-
-  return name
-}
-
-function fillForm(form: HTMLFormElement, defaults: any) {
-  Object.keys(defaults).forEach(name => {
-    let element = form.elements[name]
-    const defValue = defaults[name]
-
-    if (element === undefined && Array.isArray(defValue)) {
-       element = form.elements[`${name}[]`]
-    }
-
-    if (element === undefined) {
-      return
-    }
-
-    function wrap<T>(list): Array<T & HTMLFormElement> {
-      return list.length !== undefined ? list : [list]
-    }
-
-    switch (element.tagName) {
-      case 'INPUT':
-        switch (element.type.toLowerCase()) {
-          case 'checkbox':
-            if (typeof defValue === 'boolean') {
-              wrap(element).forEach(elem => elem.checked = defValue)
-            } else if (Array.isArray(defValue)) {
-              wrap(element).forEach(elem => elem.checked = defValue.indexOf(element.value) > -1)
-            } else {
-              wrap(element).forEach(elem => elem.checked = elem.value === defValue)
-            }
-            break
-          case 'radio':
-            wrap(element).forEach(elem => elem.checked = elem.value === defValue)
-            break
-          default:
-            element.value = defaults[name]
-        }
-        break
-      case 'SELECT':
-        if (element.multiple && Array.isArray(defValue)) {
-          element.querySelectorAll('option').forEach(option => {
-            option.selected = defValue.indexOf(option.value) > -1
-          })
-        } else {
-          element.querySelectorAll('option').forEach(option => {
-            option.selected = option.value === defValue
-          })
-        }
-
-        break
-      case 'TEXTAREA':
-        element.value = defaults[name]
-        break
-    }
-
-    if (element.tagName === 'INPUT') {
-
-    }
-
-  })
-}
-
-/**
- * Serialize the form data as string. URl encoded by default
- *
- * @param data
- * @param asJson
- */
-function serializeData(data: FormData, asJson: boolean = false) {
-  let payload = {}
-  for (const name of data.keys()) {
-    const value = data.getAll(name)
-
-    payload[cleanName(name)] = value.length === 1 ? value[0] : value
-  }
-
-  if (asJson) {
-    return JSON.stringify(payload)
-  }
-
-  return Object.keys(payload).map(name => {
-    const value = payload[name]
-
-    if (Array.isArray(value)) {
-      return value.map((value) => {
-        return `${name}=${encodeURIComponent(value)}`
-      }).join('&')
-    }
-
-    return `${name}=${encodeURIComponent(value)}`
-  }).join('&')
-}
-
 function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, ...options}: FormProps) {
   const formRef = useRef<HTMLFormElement>()
+  const {
+    submitting = () => {
+    }
+  } = options
 
   useEffect(() => {
     const $form = formRef.current
-    $form.addEventListener('change', handleChange)
 
-    if (Object.keys(defaults).length) {
-      fillForm($form, defaults)
+    if ($form) {
+      $form.addEventListener('change', handleChange)
+
+      if (Object.keys(defaults).length) {
+        fillForm($form, defaults)
+      }
+
+      return () => $form.removeEventListener('change', handleChange)
     }
-
-    return () => formRef.current?.removeEventListener('change', handleChange)
   }, [formRef.current])
 
   function handleChange(event: ChangeEvent) {
@@ -149,20 +70,26 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, .
       const data = new FormData(formRef.current)
 
       if (jsonRequest) {
-        init.body = serializeData(data, true)
+        init.body = serializeFormData(data, true)
         init.headers = {'Content-Type': 'application/json'}
       } else {
-        init.body = serializeData(data)
+        init.body = serializeFormData(data)
         init.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
       }
 
       let isOk = true
+
+      // Triggers the submission hook letting the consumer know the submission is progress
+      submitting(true)
 
       fetch(action, {
         ...init,
         method,
       }).then((response: Response) => {
         isOk = response.ok
+
+        // Trigger the submission hook to notify the consumer the submission has ended
+        submitting(false)
 
         const contentType = response.headers.get('Content-Type')
 
