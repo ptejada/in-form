@@ -1,4 +1,4 @@
-name: NodeJS with Gulp
+name: Unittest
 
 on:
   push:
@@ -22,7 +22,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Unit Test
+    - name: Run test suite
       run: |
-        yarn install 
+        yarn install
+        yarn add mocha-github-actions-reporter
         yarn test
+      env:
+        MOCHA_REPORTER: mocha-github-actions-reporter

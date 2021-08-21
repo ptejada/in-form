@@ -8,8 +8,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "prepublish": "yarn test && rm -rf dist && yarn build",
+    "build": "rm -rf dist && tsc",
+    "prepublish": "yarn test && yarn build",
     "test": "ts-mocha tests/**/*.test.*"
   },
   "repository": {
