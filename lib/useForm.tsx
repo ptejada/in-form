@@ -14,7 +14,7 @@ export interface FormProps {
   action?: string
   method?: METHOD
   jsonRequest?: boolean
-  handleSubmit?: (data, done: (response, isOk?: boolean) => OptionalPromise) => OptionalPromise
+  handleSubmit?(url, data, done: (response, isOk?: boolean) => OptionalPromise): OptionalPromise
   /**
    * Triggered when the submitting state changes
    *
@@ -38,7 +38,8 @@ export interface FormProps {
 
 type ChangeEvent = Event | SyntheticEvent<HTMLInputElement>
 
-function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, ...options}: FormProps) {
+function useForm(props?: FormProps) {
+  const {action, method = 'POST', jsonRequest = false, defaults = {}, ...options} = props
   const formRef = useRef<HTMLFormElement>()
   const {
     submitting = () => {},
@@ -70,16 +71,18 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, .
 
     const {handleSubmit: submitter} = options
     const data = new window.FormData(formRef.current)
+    const actionUrl = action || formRef.current.action
+    const actionMethod = method || formRef.current.method
 
     // Use custom submission handler if provided
     if (typeof submitter === 'function') {
       submitting(true)
-      const subPromise = submitter(formPayload(data), (response, isOk) => {
+      const subPromise = submitter(actionUrl, formPayload(data), (response, isOk) => {
         submitting(false)
         if (isOk === false) {
-          options?.onSuccess(response)
+          options?.onSuccess?.(response)
         } else {
-          options?.onFailure(response)
+          options?.onFailure?.(response)
         }
       })
 
@@ -94,7 +97,7 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, .
     }
 
     // Continue with the built-in submitter logic
-    if (action?.length) {
+    if (actionUrl?.length) {
       let init: RequestInit = {}
 
       if (jsonRequest) {
@@ -110,9 +113,9 @@ function useForm({action, method = 'POST', jsonRequest = false, defaults = {}, .
       // Triggers the submission hook letting the consumer know the submission is progress
       submitting(true)
 
-      fetch(action, {
+      fetch(actionUrl, {
         ...init,
-        method,
+        method: actionMethod,
       }).then((response: Response) => {
         isOk = response.ok
 

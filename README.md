@@ -1,11 +1,13 @@
 # In-Form
+[![npm version](https://badge.fury.io/js/@tejada%2Fin-form.svg)](https://badge.fury.io/js/@tejada%2Fin-form)
+[![Unittest](https://github.com/ptejada/in-form/actions/workflows/unittest.yml/badge.svg)](https://github.com/ptejada/in-form/actions/workflows/unittest.yml)
 
-A simple React form component and hook to work with HTML forms. The library focus on simplicity and transition from
-regular HTML forms to React.
+A simple React form component and hook to work with HTML forms. The library focus on simplicity and ease of transition 
+from regular HTML forms to React.
 
 While the official React docs on forms suggests that we should use controlled components, in most cases we don't really
-need to monitor or track the form fields on every keystroke. This library relies on original DOM events so your will
-still look like standard HTML forms for the most part.
+need to monitor or track the form fields on every keystroke. This library relies on original DOM events so your form 
+will still look like standard HTML forms for the most part.
 
 Features include:
 
@@ -68,8 +70,8 @@ The form can process and submitted replacing `<form>` tag with the `InForm` reac
 
 > **Note:** The label`for` attribute is not supported in React and is replaced by `htmlFor`.
 
-Nothing else is needed in the example above for the form to be processed and submitted via ajax. You play with a live
-version of this example in the [Demo - Contact Form]
+Nothing else is needed in the example above for the form to be processed and submitted via ajax. You can play with a 
+live version of this example in the [Demo - Contact Form]
 
 If you prefer, you can also use the React hook `useForm` and keep your existing form intact. You will only need to
 spread the generated props to the form element. Ex:
