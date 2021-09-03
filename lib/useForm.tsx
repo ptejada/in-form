@@ -89,7 +89,7 @@ function useForm(props?: FormProps) {
       if (subPromise && typeof subPromise.then === 'function') {
         return subPromise
           .then(options.onSuccess, options.onFailure)
-          .catch(options.onFailure)
+          .catch((...err) => console.error(...err))
           .finally(() => submitting(false))
       }
 

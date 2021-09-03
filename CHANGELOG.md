@@ -8,11 +8,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
-
 - A `submitting` callback to notify the consumer when the submitting state for the form changes.
 - A `handleSubmit` callback as a custom submission handler. Within this callback the user will have full control over
   the submission process.
 - Automated test runner.
+
+### Fixed
+- Fixed issue #1 where the action attribute was not be read from the reference form element.
 
 ## [0.1.2] - 2021-08-16
 

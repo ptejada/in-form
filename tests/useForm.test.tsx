@@ -4,7 +4,7 @@ import {useForm} from '../lib'
 
 
 describe('useForm hook testing', () => {
-  test('', () => {
+  test('read action attribute from the referenced form', () => {
     let formProps
 
     const handleSubmit = jest.fn(() => Promise.resolve(true))
