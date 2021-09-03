@@ -22,14 +22,14 @@ Features include:
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
-  - [action](#action)
-  - [method](#method)
-  - [jsonRequest](#jsonrequest)
-  - [defaults](#defaults)
-  - [submitting](#submitting)
-  - [onSuccess](#onsuccess)
-  - [onFailure](#onfailure)
-  - [handleSubmit](#handlesubmit)
+  - [action]
+  - [method]
+  - [jsonRequest]
+  - [defaults]
+  - [submitting]
+  - [onSuccess]
+  - [onFailure]
+  - [handleSubmit]
 - [Roadmap](#roadmap)
 
 ## Installation
@@ -180,18 +180,20 @@ A callback function that is call with the `response` of failed form submission r
 considered to have failed if the response is in the `4xx` and `5xx` range.
 
 #### handleSubmit
-`(action, data) => Promise` or `(action, data, done(response, isOk?: boolean)) => void`
+`(action, data) => Promise`
 
 A function handler to overwrite the built-in form submission. The handler is called on form submission and receives
-the form `action` url as the first parameter and the form `data` as the second. In order to no break the workflow of
-other callback functions this handler provides to way to mark the submission as a success or failure.
-- `(action, data) => Promise` <br> 
-You can return a promise from the handler. If the promise is resolved then the resolution param will be passed to 
-[onSuccess]. If the promise is rejected then [onFailure] will be call. 
-- `(action, data, done(response, isOk?: boolean)) => void` <br>
-You can use the `done()` function passed as the third parameter. The `done()` function accepts a `response` as the 
-first parameter. The second parameter is a boolean flag indicating whether the `response` will be piped to either  the
-[onSuccess] or [onFailure] callback.
+the form `action` url as the first parameter and the form `data` as the second. In order to not break the workflow of
+other callback functions this handler provides two ways to mark the submission as a success or failure.
+
+The first is returning a promise from the handler. If the promise is resolved then the resolution param will be passed to
+[onSuccess]. If the promise is rejected then [onFailure] will be called.
+
+`(action, data, done(response, isOk?: boolean)) => void`
+
+Alternatively, you can use the `done()` function passed as the third parameter. The `done()` function accepts a 
+`response` as the first parameter. The second parameter is a boolean flag indicating whether the `response` will be 
+piped to either  the [onSuccess] or [onFailure] callback.
 
 Even if you handle both the submission and the outcome withing the submit handler and do not use either the [onSuccess]
 or [onFailure] callbacks, it is good practice to still resolve the submission with either a promise or the `done()` 
@@ -204,5 +206,13 @@ See the [Roadmap Board] & [Changelog](CHANGELOG.md)
 [Demo - Contact Form]: https://codesandbox.io/s/tejada-in-form-contact-form-4betf
 [Demo - Contact Form (hook)]: https://codesandbox.io/s/tejada-in-form-contact-form-hook-g4oz8
 [Roadmap Board]: https://github.com/ptejada/in-form/projects/1
-[onFailure]: #onfailure-response--void
-[onSuccess]: #onsuccess-response--void
+[onFailure]: #onfailure
+[onSuccess]: #onsuccess
+[action]: #action
+[method]: #method
+[jsonRequest]: #jsonrequest
+[defaults]: #defaults
+[submitting]: #submitting
+[onSuccess]: #onsuccess
+[onFailure]: #onfailure
+[handleSubmit]: #handlesubmit
