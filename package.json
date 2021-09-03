@@ -1,6 +1,6 @@
 {
   "name": "@tejada/in-form",
-  "version": "0.1.2",
+  "version": "0.2.0-rc.0",
   "description": "A simple React component and hook to work with HTML forms",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
